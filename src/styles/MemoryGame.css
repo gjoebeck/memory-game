@@ -1,0 +1,175 @@
+
+/* General styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1a202c, #2d3748, #4a5568);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Container styling */
+  .memory-game-container {
+    padding: 2rem;
+    border-radius: 0.5rem;
+    position: relative;  /* Changed from fixed */
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  /* Header Section */
+  .memory-game-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    animation: slideDown 0.5s ease-out;
+  }
+  
+  .memory-game-header .icon-wrapper {
+    width: 7rem;
+    height: 7rem;
+    background-color: #805ad5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 15px rgba(128, 90, 213, 0.7);
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .memory-game-header p {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  /* Scoreboard Section */
+  .memory-game-scoreboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+  }
+
+  .memory-game-scoreboard .score {
+    font-weight: bold;
+    color: #fbbf24;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .memory-game-scoreboard .restart-button {
+    padding: 0.7rem 1.5rem;
+    background-color: #805ad5;
+    color: #fff;
+    border: none;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .memory-game-scoreboard .restart-button:hover {
+    background-color: #6b46c1;
+    transform: scale(1.05);
+  }
+  
+  /* Game grid */
+  .memory-game-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 6rem);
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  
+  /* Start Menu Styling */
+  .start-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #1a202c, #2d3748, #4a5568);
+  }
+
+  .start-menu-content {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    animation: popIn 0.5s ease-in-out;
+  }
+
+  @keyframes popIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .title-section {
+    margin-bottom: 2rem;
+  }
+
+  .game-title {
+    font-size: 2.5rem;
+    color: #fbbf24;
+    text-shadow: 2px 2px 4px #000;
+    margin: 0.5rem 0;
+  }
+
+  .swords {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .scroll-section {
+    margin-bottom: 2rem;
+  }
+
+  .scroll-text {
+    margin-top: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .start-button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background-color: #fbbf24;
+    color: #1a202c;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  .start-button:hover {
+    background-color: #eab308;
+    transform: scale(1.1);
+  }

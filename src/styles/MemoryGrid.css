@@ -1,0 +1,6 @@
+.memory-game-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 6rem);
+    gap: 1.5rem;
+    justify-content: center;
+}
