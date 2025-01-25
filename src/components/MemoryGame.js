@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sword, Shield, Star, Scroll, Crown, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { Sword, Shield, Star, Scroll, Crown, Heart, Gem, Sun, Moon, ArrowRight, Volume2, VolumeX } from 'lucide-react';
 import MemoryGrid from './memoryGrid';
 import '../styles/MemoryGame.css';
 import '../styles/Card.css';
-import '../styles/MemoryGrid.css';
-import '../styles/App.css';
 
 const MemoryGame = () => {
+  const [level, setLevel] = useState(1);
   const [cards, setCards] = useState([]);
   const [flipped, setFlipped] = useState([]);
   const [matched, setMatched] = useState([]);
@@ -15,16 +14,30 @@ const MemoryGame = () => {
   const [gameOver, setGameOver] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [lastMatchedPair, setLastMatchedPair] = useState([]);
   
   const audioRef = useRef(new Audio('/background-music.mp3'));
+  const matchSoundRef = useRef(new Audio('/match-sound.mp3'));
   
-  const icons = [
+  const allIcons = [
     { id: 1, Icon: Sword, name: 'sword' },
     { id: 2, Icon: Shield, name: 'shield' },
     { id: 3, Icon: Star, name: 'star' },
     { id: 4, Icon: Scroll, name: 'scroll' },
     { id: 5, Icon: Crown, name: 'crown' },
+    { id: 6, Icon: Heart, name: 'heart' },
+    { id: 7, Icon: Gem, name: 'gem' },
+    { id: 8, Icon: Sun, name: 'sun' },
+    { id: 9, Icon: Moon, name: 'moon' },
   ];
+
+  const getLevelIcons = () => {
+    return allIcons.slice(0, 4 + level);
+  };
+
+  const getMovesLimit = () => {
+    return 8 + (level * 2);
+  };
 
   useEffect(() => {
     audioRef.current.loop = true;
@@ -52,7 +65,12 @@ const MemoryGame = () => {
       const isMatch = firstCard?.name === secondCard?.name;
       
       if (isMatch) {
+        matchSoundRef.current.play();
         setMatched(prev => [...prev, firstCard.name]);
+        setLastMatchedPair([first, second]);
+        setTimeout(() => {
+          setLastMatchedPair([]);
+        }, 1000);
         setFlipped([]);
       } else {
         setMismatched([first, second]);
@@ -66,13 +84,15 @@ const MemoryGame = () => {
   }, [flipped, cards]);
 
   useEffect(() => {
-    if (matched.length === icons.length) {
+    const levelIcons = getLevelIcons();
+    if (matched.length === levelIcons.length) {
       setTimeout(() => setShowSuccess(true), 500);
     }
-  }, [matched, icons.length]);
+  }, [matched, level]);
 
-  const initializeGame = () => {
-    const shuffledCards = [...icons, ...icons]
+  const initializeGame = (newLevel = level) => {
+    const levelIcons = allIcons.slice(0, 4 + newLevel);
+    const shuffledCards = [...levelIcons, ...levelIcons]
       .sort(() => Math.random() - 0.5)
       .map((card, index) => ({ ...card, index }));
     setCards(shuffledCards);
@@ -84,22 +104,34 @@ const MemoryGame = () => {
     setShowSuccess(false);
   };
 
+  const nextLevel = () => {
+    if (level < 5) {
+      const newLevel = level + 1;
+      setLevel(newLevel);
+      initializeGame(newLevel);
+    }
+  };
+
   useEffect(() => {
     initializeGame();
   }, []);
 
   useEffect(() => {
-    if (moves >= 10 && matched.length < icons.length) {
+    const movesLimit = getMovesLimit();
+    if (moves >= movesLimit && matched.length < getLevelIcons().length) {
       setGameOver(true);
-      setTimeout(initializeGame, 2000);
+      setTimeout(() => initializeGame(), 2000);
     }
-  }, [moves, matched.length, icons.length]);
+  }, [moves, matched.length, level]);
 
   const handleClick = (index) => {
     if (flipped.length < 2 && !flipped.includes(index) && !matched.includes(cards[index].name)) {
       setFlipped(prev => [...prev, index]);
     }
   };
+
+  const movesLimit = getMovesLimit();
+  const levelIcons = getLevelIcons();
 
   return (
     <div className="memory-game-container">
@@ -113,11 +145,14 @@ const MemoryGame = () => {
             style={{filter: "brightness(0) invert(1)"}} 
           />
         </div>
-        <p>
-          {matched.length === icons.length
-            ? "Congratulations, you win!"
-            : "Match the symbols to win"}
-        </p>
+        <div className="header-content">
+          <p className="level-indicator">Level {level}</p>
+          <p>
+            {matched.length === levelIcons.length
+              ? "Level Complete!"
+              : "Match the symbols to win"}
+          </p>
+        </div>
         <button 
           onClick={toggleMusic}
           className="p-2 bg-purple-600 rounded-full hover:bg-purple-700 transition-colors"
@@ -130,10 +165,10 @@ const MemoryGame = () => {
       </div>
 
       <div className="memory-game-scoreboard">
-        <span className="score">Moves: {moves}/10</span>
-        <span className="score">Matches: {matched.length}/{icons.length}</span>
-        <button onClick={initializeGame} className="restart-button">
-          Restart
+        <span className="score">Moves: {moves}/{movesLimit}</span>
+        <span className="score">Matches: {matched.length}/{levelIcons.length}</span>
+        <button onClick={() => initializeGame()} className="restart-button">
+          Restart Level
         </button>
       </div>
 
@@ -142,20 +177,26 @@ const MemoryGame = () => {
         flipped={flipped}
         matched={matched}
         mismatched={mismatched}
+        lastMatchedPair={lastMatchedPair}
         handleClick={handleClick}
       />
 
       {showSuccess && (
-        <div className="memory-game-success">
-          <button className="restart-button">
-            Continue Journey <ArrowRight size={20} />
-          </button>
+        <div className="celebration-overlay">
+          <h2 className="text-4xl mb-4">Level {level} Complete!</h2>
+          {level < 5 ? (
+            <button onClick={nextLevel} className="restart-button">
+              Start Level {level + 1} <ArrowRight size={20} />
+            </button>
+          ) : (
+            <div className="text-2xl mt-4">Congratulations! You've completed all levels!</div>
+          )}
         </div>
       )}
 
       {gameOver && (
         <div className="memory-game-failure">
-          Your memory fails you. Try again!
+          Out of moves! Try again!
         </div>
       )}
     </div>
