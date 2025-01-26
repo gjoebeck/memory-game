@@ -8,7 +8,7 @@ const StartMenu = ({ onStartGame }) => {
       <div className="start-menu-content">
         <div className="title-section">
           <Crown className="crown-icon" size={80} />
-          <h1 className="game-title">Memory Quest</h1>
+          <h1 className="game-title">Card Matcher</h1>
           <div className="swords">
             <Sword className="sword-left" size={50} />
             <Sword className="sword-right" size={50} />
@@ -17,7 +17,7 @@ const StartMenu = ({ onStartGame }) => {
         
         <div className="scroll-section">
           <Scroll size={40} className="scroll-icon" />
-          <p className="scroll-text">Embark on a journey to test your memory and claim the crown!</p>
+          <p className="scroll-text">Test your memory!</p>
         </div>
 
         <button onClick={onStartGame} className="start-button">

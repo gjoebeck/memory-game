@@ -1,0 +1,43 @@
+.music-player {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    background: rgba(88, 28, 135, 0.8);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(4px);
+  }
+  
+  .music-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .control-button {
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .control-button:hover {
+    color: rgb(216, 180, 254);
+  }
+  
+  .volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .volume-slider {
+    width: 5rem;
+    accent-color: rgb(216, 180, 254);
+  }
+  
+  .track-title {
+    color: white;
+    font-size: 0.875rem;
+  }

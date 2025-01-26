@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Sword, Shield, Star, Scroll, Crown, Heart, Gem, Sun, Moon, ArrowRight, Volume2, VolumeX } from 'lucide-react';
+import { Sword, Shield, Star, Scroll, Crown, Heart, Gem, Sun, Moon, ArrowRight } from 'lucide-react';
 import MemoryGrid from './memoryGrid';
 import '../styles/MemoryGame.css';
 import '../styles/Card.css';
-import '../styles/Celebration.css'
+import '../styles/Celebration.css';
 
 const MemoryGame = () => {
   const [level, setLevel] = useState(1);
@@ -14,10 +14,9 @@ const MemoryGame = () => {
   const [moves, setMoves] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [lastMatchedPair, setLastMatchedPair] = useState([]);
+  const [timeLeft, setTimeLeft] = useState(120);
   
-  const audioRef = useRef(new Audio('/background-music.mp3'));
   const matchSoundRef = useRef(new Audio('/match-sound.mp3'));
   const victorySoundRef = useRef(new Audio('/victory-sound.mp3'));
   
@@ -42,21 +41,19 @@ const MemoryGame = () => {
   };
 
   useEffect(() => {
-    audioRef.current.loop = true;
-    return () => {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    };
-  }, []);
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0) {
+          clearInterval(timer);
+          setGameOver(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-  const toggleMusic = () => {
-    if (isMusicPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsMusicPlaying(!isMusicPlaying);
-  };
+    return () => clearInterval(timer);
+  }, [level]);
 
   useEffect(() => {
     if (flipped.length === 2) {
@@ -66,25 +63,16 @@ const MemoryGame = () => {
       const levelIcons = getLevelIcons();
 
       if (firstCard?.name === secondCard?.name) {
-        // Play match sound
         matchSoundRef.current.play();
-        
-        // Add to matched cards
         setMatched(prev => {
           const newMatched = [...prev, firstCard.name];
-          // Check if this completes the level
           if (newMatched.length === levelIcons.length) {
             victorySoundRef.current.play();
-            setTimeout(() => setShowSuccess(true), 500);
+            setShowSuccess(true);
           }
           return newMatched;
         });
-
-        setLastMatchedPair([first, second]);
-        setTimeout(() => {
-          setLastMatchedPair([]);
-          setFlipped([]);
-        }, 1000);
+        setFlipped([]);
       } else {
         setMismatched([first, second]);
         setTimeout(() => {
@@ -108,6 +96,7 @@ const MemoryGame = () => {
     setMoves(0);
     setGameOver(false);
     setShowSuccess(false);
+    setTimeLeft(120);
   };
 
   const nextLevel = () => {
@@ -124,11 +113,11 @@ const MemoryGame = () => {
 
   useEffect(() => {
     const movesLimit = getMovesLimit();
-    if (moves >= movesLimit && matched.length < getLevelIcons().length) {
+    if ((moves >= movesLimit || timeLeft <= 0) && matched.length < getLevelIcons().length) {
       setGameOver(true);
       setTimeout(() => initializeGame(), 2000);
     }
-  }, [moves, matched.length, level]);
+  }, [moves, matched.length, level, timeLeft]);
 
   const handleClick = (index) => {
     if (flipped.length < 2 && !flipped.includes(index) && !matched.includes(cards[index].name)) {
@@ -153,25 +142,17 @@ const MemoryGame = () => {
         </div>
         <div className="header-content">
           <p className="level-indicator">Level {level}</p>
+          <p className="timer">Time: {timeLeft}s</p>
           <p>
             {matched.length === levelIcons.length
               ? "Level Complete!"
               : "Match the symbols to win"}
           </p>
         </div>
-        <button 
-          onClick={toggleMusic}
-          className="p-2 bg-purple-600 rounded-full hover:bg-purple-700 transition-colors"
-        >
-          {isMusicPlaying ? 
-            <Volume2 size={24} color="white" /> : 
-            <VolumeX size={24} color="white" />
-          }
-        </button>
       </div>
 
       <div className="memory-game-scoreboard">
-        <span className="score">Moves: {moves}/{movesLimit}</span>
+        <span className="score">Tries: {moves}/{movesLimit}</span>
         <span className="score">Matches: {matched.length}/{levelIcons.length}</span>
         <button onClick={() => initializeGame()} className="restart-button">
           Restart Level
@@ -187,27 +168,30 @@ const MemoryGame = () => {
         handleClick={handleClick}
       />
 
-{showSuccess && (
-  <div className="celebration-overlay">
-    <div className="success-content">
-      <h2 className="success-heading">Level {level} Complete!</h2>
-      {level < 5 ? (
-        <button onClick={nextLevel} className="next-level-button">
-          Start Level {level + 1}
-          <ArrowRight size={24} />
-        </button>
-      ) : (
-        <div className="success-heading">
-          Congratulations! You've completed all levels!
+      {showSuccess && (
+        <div className="celebration-overlay">
+          <div className="firework"></div>
+          <div className="firework"></div>
+          <div className="firework"></div>
+          <div className="success-content">
+            <h2 className="success-heading">Level {level} Complete!</h2>
+            {level < 5 ? (
+              <button onClick={nextLevel} className="next-level-button">
+                Start Level {level + 1}
+                <ArrowRight size={24} />
+              </button>
+            ) : (
+              <div className="success-heading">
+                Congratulations! You've completed all levels!
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
-  </div>
-)}
 
       {gameOver && (
         <div className="memory-game-failure">
-          Out of moves! Try again!
+          {timeLeft <= 0 ? "Time's up!" : "Out of moves!"} Try again!
         </div>
       )}
     </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import MemoryGame from "./components/MemoryGame";
 import StartMenu from "./components/Menu"; 
+import MusicPlayer from "./components/MusicPlayer.js";
 import "./styles/App.css";
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       ) : (
         <StartMenu onStartGame={() => setGameStarted(true)} />
       )}
+      <MusicPlayer />
     </div>
   );
 }
