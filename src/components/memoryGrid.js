@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "./Cards";
 
-const MemoryGrid = ({ cards, flipped, matched, mismatched, handleClick }) => {
+const MemoryGrid = ({ cards, flipped, matched, mismatched, lastMatchedPair, handleClick }) => {
   return (
     <div className="memory-game-grid">
       {cards.map((card, index) => (
@@ -11,6 +11,7 @@ const MemoryGrid = ({ cards, flipped, matched, mismatched, handleClick }) => {
           isFlipped={flipped.includes(index)}
           isMatched={matched.includes(card.name)}
           isMismatch={mismatched.includes(index)}
+          isLastMatched={lastMatchedPair.includes(index)}
           onClick={() => handleClick(index)}
         />
       ))}

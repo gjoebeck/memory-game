@@ -3,6 +3,7 @@ import { Sword, Shield, Star, Scroll, Crown, Heart, Gem, Sun, Moon, ArrowRight, 
 import MemoryGrid from './memoryGrid';
 import '../styles/MemoryGame.css';
 import '../styles/Card.css';
+import '../styles/Celebration.css'
 
 const MemoryGame = () => {
   const [level, setLevel] = useState(1);
@@ -18,6 +19,7 @@ const MemoryGame = () => {
   
   const audioRef = useRef(new Audio('/background-music.mp3'));
   const matchSoundRef = useRef(new Audio('/match-sound.mp3'));
+  const victorySoundRef = useRef(new Audio('/victory-sound.mp3'));
   
   const allIcons = [
     { id: 1, Icon: Sword, name: 'sword' },
@@ -61,17 +63,28 @@ const MemoryGame = () => {
       const [first, second] = flipped;
       const firstCard = cards[first];
       const secondCard = cards[second];
+      const levelIcons = getLevelIcons();
 
-      const isMatch = firstCard?.name === secondCard?.name;
-      
-      if (isMatch) {
+      if (firstCard?.name === secondCard?.name) {
+        // Play match sound
         matchSoundRef.current.play();
-        setMatched(prev => [...prev, firstCard.name]);
+        
+        // Add to matched cards
+        setMatched(prev => {
+          const newMatched = [...prev, firstCard.name];
+          // Check if this completes the level
+          if (newMatched.length === levelIcons.length) {
+            victorySoundRef.current.play();
+            setTimeout(() => setShowSuccess(true), 500);
+          }
+          return newMatched;
+        });
+
         setLastMatchedPair([first, second]);
         setTimeout(() => {
           setLastMatchedPair([]);
+          setFlipped([]);
         }, 1000);
-        setFlipped([]);
       } else {
         setMismatched([first, second]);
         setTimeout(() => {
@@ -82,13 +95,6 @@ const MemoryGame = () => {
       }
     }
   }, [flipped, cards]);
-
-  useEffect(() => {
-    const levelIcons = getLevelIcons();
-    if (matched.length === levelIcons.length) {
-      setTimeout(() => setShowSuccess(true), 500);
-    }
-  }, [matched, level]);
 
   const initializeGame = (newLevel = level) => {
     const levelIcons = allIcons.slice(0, 4 + newLevel);
@@ -134,7 +140,7 @@ const MemoryGame = () => {
   const levelIcons = getLevelIcons();
 
   return (
-    <div className="memory-game-container">
+    <div className="memory-game-container" data-level={level}>
       <div className="memory-game-header">
         <div className="icon-wrapper">
           <img 
@@ -181,18 +187,23 @@ const MemoryGame = () => {
         handleClick={handleClick}
       />
 
-      {showSuccess && (
-        <div className="celebration-overlay">
-          <h2 className="text-4xl mb-4">Level {level} Complete!</h2>
-          {level < 5 ? (
-            <button onClick={nextLevel} className="restart-button">
-              Start Level {level + 1} <ArrowRight size={20} />
-            </button>
-          ) : (
-            <div className="text-2xl mt-4">Congratulations! You've completed all levels!</div>
-          )}
+{showSuccess && (
+  <div className="celebration-overlay">
+    <div className="success-content">
+      <h2 className="success-heading">Level {level} Complete!</h2>
+      {level < 5 ? (
+        <button onClick={nextLevel} className="next-level-button">
+          Start Level {level + 1}
+          <ArrowRight size={24} />
+        </button>
+      ) : (
+        <div className="success-heading">
+          Congratulations! You've completed all levels!
         </div>
       )}
+    </div>
+  </div>
+)}
 
       {gameOver && (
         <div className="memory-game-failure">

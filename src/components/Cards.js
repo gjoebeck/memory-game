@@ -1,10 +1,12 @@
-const Card = ({ card, isFlipped, isMatched, isMismatch, onClick }) => {
+import React from 'react';
+
+const Card = ({ card, isFlipped, isMatched, isMismatch, isLastMatched, onClick }) => {
   const showIcon = isFlipped || isMatched;
   
   return (
     <div
       onClick={() => !isFlipped && !isMatched && onClick()}
-      className={`memory-game-card ${showIcon ? "flipped" : ""} ${isMatched ? "matched" : ""} ${isMismatch ? "mismatch" : ""}`}
+      className={`memory-game-card ${showIcon ? "flipped" : ""} ${isMatched ? "matched" : ""} ${isMismatch ? "mismatch" : ""} ${isLastMatched ? "last-matched" : ""}`}
     >
       <div className="card-inner">
         <div className="card-front" />

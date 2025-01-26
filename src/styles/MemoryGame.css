@@ -173,3 +173,20 @@ body {
     background-color: #eab308;
     transform: scale(1.1);
   }
+
+  .memory-game-card.matched .card-back {
+    background-color: #38a169;
+    animation: matchHighlight 1s ease-out;
+  }
+  
+  @keyframes matchHighlight {
+    0% {
+      box-shadow: 0 0 0 2px #38a169;
+    }
+    50% {
+      box-shadow: 0 0 20px 2px #38a169;
+    }
+    100% {
+      box-shadow: 0 0 0 2px #38a169;
+    }
+  }
