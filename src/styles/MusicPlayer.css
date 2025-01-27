@@ -1,43 +1,79 @@
+/* Music Player Styles */
+.music-player-container {
+  display: flex; /* Aligns the player and the cat side by side */
+  align-items: center;
+  gap: 20px; /* Adds space between the player and the cat */
+}
+
 .music-player {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    background: rgba(88, 28, 135, 0.8);
-    padding: 1rem;
-    border-radius: 0.5rem;
-    backdrop-filter: blur(4px);
+  position: fixed;
+  bottom: 1rem; /* Fixed position at the bottom left */
+  left: 1rem;
+  background: rgba(88, 28, 135, 0.8); /* Semi-transparent purple background */
+  padding: 1rem;
+  border-radius: 0.5rem; /* Rounded corners */
+  backdrop-filter: blur(4px); /* Adds a blur effect behind the player */
+}
+
+.music-controls {
+  display: flex; /* Aligns controls horizontally */
+  align-items: center;
+  gap: 1rem; /* Space between controls */
+}
+
+.control-button {
+  color: white;
+  background: none; /* No background for buttons */
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s; /* Smooth hover effect */
+}
+
+.control-button:hover {
+  color: rgb(216, 180, 254); /* Light purple on hover */
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between volume icon and slider */
+}
+
+.volume-slider {
+  width: 5rem; /* Width of the volume slider */
+  accent-color: rgb(216, 180, 254); /* Purple slider thumb */
+}
+
+.track-title {
+  color: white;
+  font-size: 0.875rem; /* Slightly smaller text for the track title */
+}
+
+/* Cat GIF Styles */
+.cat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cat-gif {
+  width: 150px; /* Size of the cat GIF */
+  height: auto;
+}
+
+.cat-gif.paused {
+  animation: none; /* No animation when paused */
+}
+
+.cat-gif.playing {
+  animation: loop 0.5s infinite; /* Optional bounce effect while playing */
+}
+
+@keyframes loop {
+  0%, 100% {
+    transform: scale(1);
   }
-  
-  .music-controls {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  50% {
+    transform: scale(1.05);
   }
-  
-  .control-button {
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
-  
-  .control-button:hover {
-    color: rgb(216, 180, 254);
-  }
-  
-  .volume-control {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .volume-slider {
-    width: 5rem;
-    accent-color: rgb(216, 180, 254);
-  }
-  
-  .track-title {
-    color: white;
-    font-size: 0.875rem;
-  }
+}

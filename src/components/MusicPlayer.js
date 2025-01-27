@@ -3,38 +3,38 @@ import { Play, Pause, SkipForward, SkipBack, Volume2 } from 'lucide-react';
 import '../styles/MusicPlayer.css';
 
 const MusicPlayer = () => {
-   // State variables to manage playback, current track, and volume
+  // State variables to manage playback, current track, and volume
   const [isPlaying, setIsPlaying] = useState(false); // Whether the music is currently playing
   const [currentTrack, setCurrentTrack] = useState(0); // Index of the current track
   const [volume, setVolume] = useState(0.5); // Volume level 
   const audioRef = useRef(null); // Ref to manage the Audio object
 
-   // Array of track objects with titles and file paths
+  // Array of track objects with titles and file paths
   const tracks = [
     { title: "Track 1", src: "track1.mp3" },
     { title: "Track 2", src: "track2.mp3" },
-    { title: "Track 3", src: "track3.mp3"},
-    { title: "Track 4", src: "track4.mp3"},
+    { title: "Track 3", src: "track3.mp3" },
+    { title: "Track 4", src: "track4.mp3" },
   ];
 
-    // Effect to handle track changes
+  // Effect to handle track changes
   useEffect(() => {
     const wasPlaying = isPlaying;  // Save the current play state
     audioRef.current = new Audio(tracks[currentTrack].src); // Load the new track
     audioRef.current.volume = volume;  // Set the volume for the new track
     audioRef.current.loop = true; // Enable looping for the track
-    
+
     if (wasPlaying) {
       audioRef.current.play(); // Resume playback if the previous track was playing
     }
-     // Cleanup: Pause and remove the previous track's audio object
+    // Cleanup: Pause and remove the previous track's audio object
     return () => {
       audioRef.current.pause();
       audioRef.current = null;
     };
   }, [currentTrack]); // Runs whenever the current track changes
 
-// Toggle play/pause state
+  // Toggle play/pause state
   const togglePlay = () => {
     if (isPlaying) {
       audioRef.current.pause(); // Pause playback if currently playing
@@ -44,7 +44,7 @@ const MusicPlayer = () => {
     setIsPlaying(!isPlaying); // Update the play state
   };
 
- 
+
   const nextTrack = () => {
     setCurrentTrack((prev) => (prev + 1) % tracks.length);
   };
@@ -89,6 +89,14 @@ const MusicPlayer = () => {
         <div className="track-title">
           {tracks[currentTrack].title}
         </div>
+      </div>
+      {/* Dancing Cat GIF */}
+      <div className="cat-container">
+        <img
+          src="/cat-jam-cat.gif"
+          alt="Dancing Cat"
+          className={`cat-gif ${isPlaying ? "playing" : "paused"}`}
+        />
       </div>
     </div>
   );
