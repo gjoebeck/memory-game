@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scroll, Sword, Crown } from 'lucide-react';
+import { Scroll, Sword, Crown, Brain } from 'lucide-react';
 import '../styles/StartMenu.css';
 
 const StartMenu = ({ onStartGame }) => {
@@ -7,12 +7,8 @@ const StartMenu = ({ onStartGame }) => {
     <div className="start-menu">
       <div className="start-menu-content">
         <div className="title-section">
-          <Crown className="crown-icon" size={80} />
+            <Brain className="memory-icon" size={80} />
           <h1 className="game-title">Card Matcher</h1>
-          <div className="swords">
-            <Sword className="sword-left" size={50} />
-            <Sword className="sword-right" size={50} />
-          </div>
         </div>
         
         <div className="scroll-section">
@@ -21,7 +17,7 @@ const StartMenu = ({ onStartGame }) => {
         </div>
 
         <button onClick={onStartGame} className="start-button">
-          Begin Quest
+          Start
         </button>
       </div>
     </div>

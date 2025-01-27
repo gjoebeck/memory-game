@@ -1,12 +1,12 @@
 import React from 'react';
 
-const Card = ({ card, isFlipped, isMatched, isMismatch, isLastMatched, onClick }) => {
-  const showIcon = isFlipped || isMatched;
+const Card = ({ card, isFlipped, isMatched, isMismatch, onClick }) => {
+  const showIcon = isFlipped || isMatched; // Determine if the icon should be visible 
   
   return (
     <div
       onClick={() => !isFlipped && !isMatched && onClick()}
-      className={`memory-game-card ${showIcon ? "flipped" : ""} ${isMatched ? "matched" : ""} ${isMismatch ? "mismatch" : ""} ${isLastMatched ? "last-matched" : ""}`}
+      className={`memory-game-card ${showIcon ? "flipped" : ""} ${isMatched ? "matched" : ""} ${isMismatch ? "mismatch" : ""}`}
     >
       <div className="card-inner">
         <div className="card-front" />
